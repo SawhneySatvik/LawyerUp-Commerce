@@ -89,6 +89,20 @@
             return chatLi;
         }
 
+
+        const handleChat = () => {
+            userMessage = chatInput.value.trim();
+            if(!userMessage) return;
+
+            chatbox.appendChild(createChatLi(userMessage,"outgoing"));
+
+            runChat();
+
+            setTimeout(()=>{
+                chatbox.appendChild(createChatLi(responseAI,"incoming"));
+            },100)
+        }
+
         async function runChat() {
             const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
@@ -425,19 +439,6 @@
             console.log(response.text());
             responseAI = response.text();
             return responseAI;
-        }
-
-        const handleChat = () => {
-            userMessage = chatInput.value.trim();
-            if(!userMessage) return;
-
-            chatbox.appendChild(createChatLi(userMessage,"outgoing"));
-
-            runChat();
-
-            setTimeout(()=>{
-                chatbox.appendChild(createChatLi(responseAI,"incoming"));
-            },100)
         }
         
         
