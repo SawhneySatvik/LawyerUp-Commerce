@@ -66,90 +66,61 @@
         </div>
     </footer>
 
-    
+<script type="importmap">
+    {
+      "imports": {
+        "@google/generative-ai": "https://esm.run/@google/generative-ai"
+      }
+    }
+</script>
+<script type="module">
+    import { GoogleGenerativeAI } from "@google/generative-ai";
+    const API_KEY = "AIzaSyCiNqb40pjkgs_fPLuAce4pUv9LANN5Eqo";
 
-    <script type="importmap">
-        {
-          "imports": {
-            "@google/generative-ai": "https://esm.run/@google/generative-ai"
-          }
-        }
-      </script>
-      <script type="module">
-        import { GoogleGenerativeAI } from "@google/generative-ai";
-  
-        // Fetch your API_KEY
-        const API_KEY = "AIzaSyCiNqb40pjkgs_fPLuAce4pUv9LANN5Eqo";
-  
-        const model = "gemini-pro";
-        // Access your API key (see "Set up your API key" above)
-        const genAI = new GoogleGenerativeAI(API_KEY);
-  
-        // ...
-  
-        const chatInput = document.querySelector(".chat-input textarea");
-        const sendChatBtn = document.querySelector(".chat-input span");
-        const chatbox = document.querySelector(".chatbox");
+    const model = "gemini-pro";
+    const genAI = new GoogleGenerativeAI(API_KEY);
 
-        let userMessage;
-        let responseAI;
+    // ...
 
-        
+    const chatInput = document.querySelector(".chat-input textarea");
+    const sendChatBtn = document.querySelector(".chat-input span");
+    const chatbox = document.querySelector(".chatbox");
 
-        const createChatLi = (message, className)=>{
-            const chatLi = document.createElement("li");
-            chatLi.classList.add("chat",className);
-            let chatContent = className === "outgoing" ? `<p>${message}</p>` : `<span class="material-symbols-outlined">smart_toy</span><p>${message}</p>`;
-            chatLi.innerHTML = chatContent;
-            return chatLi;
-        }
+    let userMessage;
+    let responseAI;
 
+    const createChatLi = (message, className)=>{
+        const chatLi = document.createElement("li");
+        chatLi.classList.add("chat",className);
+        let chatContent = className === "outgoing" ? `<p>${message}</p>` : `<span class="material-symbols-outlined">smart_toy</span><p>${message}</p>`;
+        chatLi.innerHTML = chatContent;
+        return chatLi;
+    }
 
-        const handleChat = () => {
-            userMessage = chatInput.value.trim();
-            if(!userMessage) return;
+    const handleChat = async () => {
+        userMessage = chatInput.value.trim();
+        if(!userMessage) return;
 
-            chatbox.appendChild(createChatLi(userMessage,"outgoing"));
+        chatbox.appendChild(createChatLi(userMessage,"outgoing"));
 
-            runChat();
+        responseAI = await runChat(userMessage);
 
-            setTimeout(()=>{
-                chatbox.appendChild(createChatLi(responseAI,"incoming"));
-            },100)
-        }
+        chatbox.appendChild(createChatLi(responseAI,"incoming"));
+    }
 
-        async function runChat() {
-            const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    async function runChat(input) {
+        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
-            const generationConfig = {
-                temperature: 0.9,
-                topK: 1,
-                topP: 1,
-                maxOutputTokens: 2048,
-            };
+        const generationConfig = {
+            temperature: 0.9,
+            topK: 1,
+            topP: 1,
+            maxOutputTokens: 2048,
+        };
 
-            /*const safetySettings = [
-            {
-                category: HarmCategory.HARM_CATEGORY_HARASSMENT,
-                threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH,
-            },
-            {
-                category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-                threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH,
-            },
-            {
-                category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-                threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH,
-            },
-            {
-                category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-                threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH,
-            },
-            ];*/
-
-            const chat = model.startChat({
-                generationConfig,
-                history: [
+        const chat = model.startChat({
+            generationConfig,
+            history: [
       {
         role: "user",
         parts: [{ text: "You are Krish, , a friendly legal adviser and lawyer assistant who works for Lawyer Up, a generative AI legal website providing legal solutions for day to day purposes depending upon one's need. Currently you specialise in Indian laws and constitution only and are currently serving to businesses like  grocery merchants , e-commerce merchants, fashion merchants, agricultural dependents, and food and beverages. Multiple challenges are faced by e-commerce merchants when it comes to legal compliance and product safety. Navigating through the myriad of central and state regulations can be daunting, but you are here to simplify the process for you. You empowers e-commerce merchants to navigate regulatory complexities with ease, ensuring product safety and legal compliance across all categories. Be a little concise and crisp in your replies, try to answer in as little words as possible."}],
@@ -447,18 +418,14 @@
         parts: [{ text: "**Canceling a Service Contract:**\n\n* **Review the Contract:** Carefully review the contract to see if there is a cancellation clause.\n* **Contact the Service Provider:** Contact the service provider and explain that you want to cancel the contract. They may be willing to cancel the contract without penalty.\n* **File a Complaint:** If the service provider refuses to cancel the contract, you can file a complaint with the Better Business Bureau or your state's consumer protection agency.\n\n**Received a Letter Saying You Owe Money:**\n\n* **Review the Statement:** Carefully review the statement to make sure that you actually owe the money.\n* **Contact the Creditor:** Contact the creditor and explain that you believe you do not owe the money. They may be able to provide you with more information or remove the debt from your account.\n* **File a Dispute:** If the creditor refuses to cooperate, you can file a dispute with the credit bureau.\n\n**Protecting Intellectual Property:**\n\n* **Copyright:** Copyright protects original works of authorship, such as writings, music, and art. You can register your copyright with the U.S. Copyright Office.\n* **Trademark:** Trademark protects distinctive signs, such as brand names and logos. You can register your trademark with the U.S. Patent and Trademark Office.\n* **Patent:** Patent protects inventions. You can apply for a patent with the U.S. Patent and Trademark Office.\n\n**Legal Requirements for Online Stores:**\n\n* **Business License:** You will need to obtain a business license from your local government.\n* **Tax Registration:** You will need to register for state and federal taxes.\n* **Privacy Policy:** You must have a privacy policy that outlines how you collect, use, and share customer data.\n* **Terms of Service:** You must have terms of service that govern the use of your online store.\n* **PCI Compliance:** If you accept credit card payments, you must be PCI compliant."}],
       },
     ],
-            });
+        });
 
-            const result = await chat.sendMessage(userMessage);
-            const response = result.response;
-            console.log(response.text());
-            responseAI = response.text();
-            return responseAI;
-        }
-        
-        
-        sendChatBtn.addEventListener("click",handleChat);
-        
-    </script>
+        const result = await chat.sendMessage(input);
+        const response = result.response;
+        return response.text();
+    }
+
+    sendChatBtn.addEventListener("click",handleChat);
+</script>
 </body>
-</html>  
+</html>
